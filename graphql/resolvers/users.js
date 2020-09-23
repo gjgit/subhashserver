@@ -1,13 +1,13 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { UserInputError } = require('apollo-server');
-const checkAuth = require('../../util/check-auth');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { UserInputError } = require("apollo-server");
+const checkAuth = require("../../util/check-auth");
 const {
   validateRegisterInput,
-  validateLoginInput
-} = require('../../util/validators');
-const { SECRET_KEY } = require('../../config');
-const User = require('../../models/User');
+  validateLoginInput,
+} = require("../../util/validators");
+const { SECRET_KEY } = require("../../config");
+const User = require("../../models/User");
 
 function generateToken(user) {
   return jwt.sign(
@@ -15,10 +15,10 @@ function generateToken(user) {
       id: user.id,
       email: user.email,
       username: user.username,
-      role: user.role
+      role: user.role,
     },
     SECRET_KEY,
-    { expiresIn: '1h' }
+    { expiresIn: "1h" }
   );
 }
 
@@ -30,7 +30,7 @@ module.exports = {
         if (user) {
           return user;
         } else {
-          throw new Error('User not found');
+          throw new Error("User not found");
         }
       } catch (err) {
         throw new Error(err);
@@ -50,21 +50,21 @@ module.exports = {
         if (user) {
           return user;
         } else {
-          throw new Error('user not found');
+          throw new Error("user not found");
         }
       } catch (err) {
         throw new Error(err);
       }
-    }
+    },
   },
   Mutation: {
     createTransaction: async (_, { userId, amount }, context) => {
       const { username } = checkAuth(context);
-      if (amount.trim() === '') {
-        throw new UserInputError('Empty amount', {
+      if (amount.trim() === "") {
+        throw new UserInputError("Empty amount", {
           errors: {
-            amount: 'amount must not empty'
-          }
+            amount: "amount must not empty",
+          },
         });
       }
 
@@ -74,30 +74,30 @@ module.exports = {
         user.transactions.unshift({
           amount,
           username,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         });
         await user.save();
         return user;
-      } else throw new UserInputError('User not found');
+      } else throw new UserInputError("User not found");
     },
     async login(_, { username, password }) {
       const { errors, valid } = validateLoginInput(username, password);
 
       if (!valid) {
-        throw new UserInputError('Errors', { errors });
+        throw new UserInputError("Errors", { errors });
       }
 
       const user = await User.findOne({ username });
 
       if (!user) {
-        errors.username = 'User not found';
-        throw new UserInputError('User not found', { errors });
+        errors.username = "User not found";
+        throw new UserInputError("User not found", { errors });
       }
 
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
-        errors.password = 'Wrong crendetials';
-        throw new UserInputError('Wrong crendetials', { errors });
+        errors.password = "Wrong crendetials";
+        throw new UserInputError("Wrong crendetials", { errors });
       }
 
       const token = generateToken(user);
@@ -105,7 +105,7 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
-        token
+        token,
       };
     },
     async register(
@@ -117,8 +117,8 @@ module.exports = {
           password,
           confirmPassword,
           role,
-          packages
-        }
+          packages,
+        },
       }
     ) {
       // Validate user data
@@ -131,25 +131,25 @@ module.exports = {
         packages
       );
       if (!valid) {
-        throw new UserInputError('Errors', { errors });
+        throw new UserInputError("Errors", { errors });
       }
       // TODO: Make sure user doesnt already exist
       const user = await User.findOne({ username });
       if (user) {
-        throw new UserInputError('Username is taken', {
+        throw new UserInputError("Username is taken", {
           errors: {
-            username: 'This username is taken'
-          }
+            username: "This username is taken",
+          },
         });
       }
       // const packageChoosen = ;
       // eslint-disable-next-line no-empty
       if (packages && packages.length) {
       } else {
-        throw new UserInputError('packages', {
+        throw new UserInputError("packages", {
           errors: {
-            packages: 'packages'
-          }
+            packages: "packages",
+          },
         });
       }
 
@@ -162,12 +162,12 @@ module.exports = {
         password,
         createdAt: new Date().toISOString(),
         role,
-        packages
+        packages,
       });
 
       var firstUser = await User.countDocuments();
       if (firstUser === 0) {
-        newUser.role = 'SuperAdmin';
+        newUser.role = "SuperAdmin";
       }
 
       const res = await newUser.save();
@@ -177,8 +177,8 @@ module.exports = {
       return {
         ...res._doc,
         id: res._id,
-        token
+        token,
       };
-    }
-  }
+    },
+  },
 };

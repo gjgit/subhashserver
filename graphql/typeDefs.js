@@ -1,6 +1,11 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server");
 
 module.exports = gql`
+  type Packs {
+    id: ID!
+    label: String
+    value: String
+  }
   type Post {
     id: ID!
     body: String!
@@ -52,6 +57,7 @@ module.exports = gql`
     getCurrentUserDetails(userId: ID!): User
     getCurrentUserDetailsForUpdation(username: String!): User
     getAllUsers: [User]
+    getPacks: [Packs]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
@@ -62,6 +68,7 @@ module.exports = gql`
     createTransaction(userId: String!, amount: String!): User!
     deleteComment(postId: ID!, commentId: ID!): Post!
     likePost(postId: ID!): Post!
+    createPack(label: String, value: String): Boolean
   }
   type Subscription {
     newPost: Post!
