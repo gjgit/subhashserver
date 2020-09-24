@@ -68,7 +68,8 @@ module.exports = gql`
     createTransaction(userId: String!, amount: String!): User!
     deleteComment(postId: ID!, commentId: ID!): Post!
     likePost(postId: ID!): Post!
-    createPack(label: String, value: String): Boolean
+    createPack(label: String, value: String): Packs!
+    deletePack(packId: ID!): String!
   }
   type Subscription {
     newPost: Post!

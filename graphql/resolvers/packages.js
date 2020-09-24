@@ -23,7 +23,17 @@ module.exports = {
           value,
         });
         const post = await newPack.save();
-        return true;
+        return post;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    async deletePack(_, { packId }, context) {
+      const user = checkAuth(context);
+      try {
+        const post = await Packs.findById(packId);
+        await post.delete();
+        return "Post deleted successfully";
       } catch (err) {
         throw new Error(err);
       }
