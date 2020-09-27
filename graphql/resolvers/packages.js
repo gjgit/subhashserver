@@ -33,7 +33,8 @@ module.exports = {
       try {
         const post = await Packs.findById(packId);
         await post.delete();
-        return "Post deleted successfully";
+        //return "Post deleted successfully";
+        return post;
       } catch (err) {
         throw new Error(err);
       }

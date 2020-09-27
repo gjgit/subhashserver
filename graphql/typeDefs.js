@@ -69,7 +69,7 @@ module.exports = gql`
     deleteComment(postId: ID!, commentId: ID!): Post!
     likePost(postId: ID!): Post!
     createPack(label: String, value: String): Packs!
-    deletePack(packId: ID!): String!
+    deletePack(packId: ID!): Packs!
   }
   type Subscription {
     newPost: Post!

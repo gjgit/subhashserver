@@ -144,14 +144,14 @@ module.exports = {
       }
       // const packageChoosen = ;
       // eslint-disable-next-line no-empty
-      if (packages && packages.length) {
-      } else {
-        throw new UserInputError("packages", {
-          errors: {
-            packages: "packages",
-          },
-        });
-      }
+      // if (packages && packages.length) {
+      // } else {
+      //   throw new UserInputError("packages", {
+      //     errors: {
+      //       packages: "packages",
+      //     },
+      //   });
+      // }
 
       // hash password and create an auth token
       password = await bcrypt.hash(password, 12);
